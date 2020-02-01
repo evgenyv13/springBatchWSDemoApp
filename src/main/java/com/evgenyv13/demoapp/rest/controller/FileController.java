@@ -1,17 +1,11 @@
 package com.evgenyv13.demoapp.rest.controller;
 
-import com.evgenyv13.demoapp.batch.model.ResponseDataDto;
+import com.evgenyv13.demoapp.batch.statistic.model.ResponseDataDto;
 import com.evgenyv13.demoapp.rest.exception.FileStorageException;
 import com.evgenyv13.demoapp.rest.exception.ReportGenerationExeption;
 import com.evgenyv13.demoapp.rest.service.BatchService;
 import com.evgenyv13.demoapp.rest.service.FileService;
-import org.springframework.batch.core.*;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

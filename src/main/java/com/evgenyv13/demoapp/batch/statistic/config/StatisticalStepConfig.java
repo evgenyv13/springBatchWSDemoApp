@@ -1,9 +1,9 @@
-package com.evgenyv13.demoapp.batch.config;
+package com.evgenyv13.demoapp.batch.statistic.config;
 
-import com.evgenyv13.demoapp.batch.model.OutputStatisticsDto;
-import com.evgenyv13.demoapp.batch.model.RequestStatisticalDataDto;
-import com.evgenyv13.demoapp.batch.processor.StatisticProcessor;
-import com.evgenyv13.demoapp.batch.witer.ResultStatisticsDtoItemWriter;
+import com.evgenyv13.demoapp.batch.statistic.model.OutputItemStatisticalDto;
+import com.evgenyv13.demoapp.batch.statistic.model.InputStatisticalDataRowDto;
+import com.evgenyv13.demoapp.batch.statistic.processor.StatisticProcessor;
+import com.evgenyv13.demoapp.batch.statistic.witer.ResultStatisticsDtoItemWriter;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -25,12 +25,12 @@ public class StatisticalStepConfig {
 
     @Bean(STATISTICALSTEP)
     public Step statisticalStep(StepBuilderFactory stepBuilderFactory,
-                                ItemReader<RequestStatisticalDataDto> statisticalDataDtoItemReader,
-                                ItemProcessor<RequestStatisticalDataDto, OutputStatisticsDto> statisticProcessor,
-                                ItemWriter<OutputStatisticsDto> resultStatisticsDtoItemWriter,
+                                ItemReader<InputStatisticalDataRowDto> statisticalDataDtoItemReader,
+                                ItemProcessor<InputStatisticalDataRowDto, OutputItemStatisticalDto> statisticProcessor,
+                                ItemWriter<OutputItemStatisticalDto> resultStatisticsDtoItemWriter,
                                 @Value("${chunk-size}") int chunkSize) {
         return stepBuilderFactory.get(STATISTICALSTEP)
-                .<RequestStatisticalDataDto, OutputStatisticsDto>chunk(chunkSize)
+                .<InputStatisticalDataRowDto, OutputItemStatisticalDto>chunk(chunkSize)
                 .reader(statisticalDataDtoItemReader)
                 .processor(statisticProcessor)
                 .writer(resultStatisticsDtoItemWriter)
@@ -41,7 +41,7 @@ public class StatisticalStepConfig {
     @Bean
     @StepScope
     public StatisticProcessor statisticProcessor(
-            Validator<OutputStatisticsDto> springValidator
+            Validator<OutputItemStatisticalDto> springValidator
     ) {
         StatisticProcessor statisticProcessor = new StatisticProcessor
                 (springValidator);
@@ -51,13 +51,13 @@ public class StatisticalStepConfig {
     }
 
     @Bean
-    public ItemWriter<OutputStatisticsDto> resultStatisticsDtoItemWriter() {
+    public ItemWriter<OutputItemStatisticalDto> resultStatisticsDtoItemWriter() {
         return new ResultStatisticsDtoItemWriter();
     }
 
     @Bean
-    public Validator<OutputStatisticsDto> springValidator() {
-        SpringValidator<OutputStatisticsDto> springValidator = new SpringValidator<>();
+    public Validator<OutputItemStatisticalDto> springValidator() {
+        SpringValidator<OutputItemStatisticalDto> springValidator = new SpringValidator<>();
         springValidator.setValidator(validator());
         return springValidator;
     }

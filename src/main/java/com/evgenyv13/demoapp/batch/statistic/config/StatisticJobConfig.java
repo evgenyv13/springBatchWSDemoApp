@@ -1,4 +1,4 @@
-package com.evgenyv13.demoapp.batch.config;
+package com.evgenyv13.demoapp.batch.statistic.config;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

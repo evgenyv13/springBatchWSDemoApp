@@ -1,4 +1,4 @@
-package com.evgenyv13.demoapp.batch.model;
+package com.evgenyv13.demoapp.batch.statistic.model;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
-public class RequestStatisticalDataDto {
+public class InputStatisticalDataRowDto {
 
     @Size(min = 2, max = 200)
     @NotEmpty

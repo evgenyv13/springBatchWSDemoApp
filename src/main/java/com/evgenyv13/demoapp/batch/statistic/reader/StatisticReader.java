@@ -1,6 +1,6 @@
-package com.evgenyv13.demoapp.batch.reader;
+package com.evgenyv13.demoapp.batch.statistic.reader;
 
-import com.evgenyv13.demoapp.batch.model.RequestStatisticalDataDto;
+import com.evgenyv13.demoapp.batch.statistic.model.InputStatisticalDataRowDto;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
@@ -25,10 +25,10 @@ public class StatisticReader {
 
     @Bean
     @StepScope
-    FlatFileItemReader<RequestStatisticalDataDto> itemReader(@Value("#{jobParameters['input.file']}") String path,
-                                                             LineMapper<RequestStatisticalDataDto> lineMapper) {
+    FlatFileItemReader<InputStatisticalDataRowDto> itemReader(@Value("#{jobParameters['input.file']}") String path,
+                                                              LineMapper<InputStatisticalDataRowDto> lineMapper) {
 
-        FlatFileItemReader<RequestStatisticalDataDto> flatFileItemReader = new FlatFileItemReader<>();
+        FlatFileItemReader<InputStatisticalDataRowDto> flatFileItemReader = new FlatFileItemReader<>();
         flatFileItemReader.setResource(new FileSystemResource(path));
         flatFileItemReader.setLineMapper(lineMapper);
 
@@ -36,9 +36,9 @@ public class StatisticReader {
     }
 
     @Bean
-    LineMapper<RequestStatisticalDataDto> lineMapper(LineTokenizer lineTokenizer,
-                                                     FieldSetMapper<RequestStatisticalDataDto> fieldSetMapper) {
-        DefaultLineMapper<RequestStatisticalDataDto> defaultLineMapper = new DefaultLineMapper<>();
+    LineMapper<InputStatisticalDataRowDto> lineMapper(LineTokenizer lineTokenizer,
+                                                      FieldSetMapper<InputStatisticalDataRowDto> fieldSetMapper) {
+        DefaultLineMapper<InputStatisticalDataRowDto> defaultLineMapper = new DefaultLineMapper<>();
         defaultLineMapper.setLineTokenizer(lineTokenizer);
         defaultLineMapper.setFieldSetMapper(fieldSetMapper);
         return defaultLineMapper;
@@ -54,9 +54,9 @@ public class StatisticReader {
 
 
     @Bean
-    FieldSetMapper<RequestStatisticalDataDto> fieldSetMapper(ConversionService conversionService) {
-        BeanWrapperFieldSetMapper<RequestStatisticalDataDto> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        fieldSetMapper.setTargetType(RequestStatisticalDataDto.class);
+    FieldSetMapper<InputStatisticalDataRowDto> fieldSetMapper(ConversionService conversionService) {
+        BeanWrapperFieldSetMapper<InputStatisticalDataRowDto> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        fieldSetMapper.setTargetType(InputStatisticalDataRowDto.class);
         fieldSetMapper.setConversionService(conversionService);
         return fieldSetMapper;
     }

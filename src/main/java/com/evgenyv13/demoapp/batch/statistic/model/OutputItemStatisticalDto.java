@@ -1,4 +1,4 @@
-package com.evgenyv13.demoapp.batch.model;
+package com.evgenyv13.demoapp.batch.statistic.model;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
-public class OutputStatisticsDto implements Serializable {
+public class OutputItemStatisticalDto implements Serializable {
 
     private Long minTime;
     private Long maxTime;
