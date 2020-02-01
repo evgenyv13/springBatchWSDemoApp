@@ -20,7 +20,6 @@ public class FileController {
     private BatchService batchService;
 
 
-
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public ResponseDataDto submit(@RequestParam("file") MultipartFile file) throws Exception {
         String filePath = fileService.saveFile(file);

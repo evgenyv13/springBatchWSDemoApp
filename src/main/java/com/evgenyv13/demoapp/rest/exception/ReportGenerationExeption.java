@@ -1,6 +1,6 @@
 package com.evgenyv13.demoapp.rest.exception;
 
-public class ReportGenerationExeption  extends RuntimeException {
+public class ReportGenerationExeption extends RuntimeException {
 
     private String msg;
 

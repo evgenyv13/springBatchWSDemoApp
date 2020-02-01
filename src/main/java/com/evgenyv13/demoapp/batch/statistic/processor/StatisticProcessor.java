@@ -13,12 +13,12 @@ import java.math.RoundingMode;
 import java.util.*;
 
 @Data
-public class StatisticProcessor extends ItemProcessorWithValidating<InputStatisticalDataRowDto, OutputItemStatisticalDto> implements StepExecutionListener{
+public class StatisticProcessor extends ItemProcessorWithValidating<InputStatisticalDataRowDto, OutputItemStatisticalDto> implements StepExecutionListener {
 
     private Map<String, TreeSet<TemporaryStatisticsItemDtoInProcessor>> aggregator;
 
 
-     public void processInput(InputStatisticalDataRowDto inputStatisticalDataRowDto) {
+    public void processInput(InputStatisticalDataRowDto inputStatisticalDataRowDto) {
         TemporaryStatisticsItemDtoInProcessor temporaryStatisticsProcessorDto = new TemporaryStatisticsItemDtoInProcessor(inputStatisticalDataRowDto);
 
         if (aggregator.containsKey(temporaryStatisticsProcessorDto.getClassNameMethodName())) {
@@ -62,7 +62,7 @@ public class StatisticProcessor extends ItemProcessorWithValidating<InputStatist
         });
 
 
-        stepExecution.getJobExecution().getExecutionContext().put("stats", new ResponseDataDto(resultStats,errorLines));
+        stepExecution.getJobExecution().getExecutionContext().put("stats", new ResponseDataDto(resultStats, errorLines));
 
         return ExitStatus.COMPLETED;
     }

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class ItemProcessorWithValidating<Input,Output> implements ItemProcessor<Input, Output>,InitializingBean {
+public abstract class ItemProcessorWithValidating<Input, Output> implements ItemProcessor<Input, Output>, InitializingBean {
 
     @Autowired
     private Validator<Input> validator;
@@ -47,5 +47,5 @@ public abstract class ItemProcessorWithValidating<Input,Output> implements ItemP
         return null;
     }
 
-    public abstract void  processInput(Input input);
+    public abstract void processInput(Input input);
 }
