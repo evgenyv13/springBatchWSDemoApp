@@ -40,24 +40,15 @@ public class StatisticalStepConfig {
 
     @Bean
     @StepScope
-    public StatisticProcessor statisticProcessor(
-            Validator<OutputItemStatisticalDto> springValidator
-    ) {
-        StatisticProcessor statisticProcessor = new StatisticProcessor
-                (springValidator);
+    public StatisticProcessor statisticProcessor() {
+        StatisticProcessor statisticProcessor = new StatisticProcessor();
         statisticProcessor.setFilter(true);
-
         return statisticProcessor;
     }
 
     @Bean
-    public ItemWriter<OutputItemStatisticalDto> resultStatisticsDtoItemWriter() {
-        return new ResultStatisticsDtoItemWriter();
-    }
-
-    @Bean
-    public Validator<OutputItemStatisticalDto> springValidator() {
-        SpringValidator<OutputItemStatisticalDto> springValidator = new SpringValidator<>();
+    public Validator<InputStatisticalDataRowDto> springValidator() {
+        SpringValidator<InputStatisticalDataRowDto> springValidator = new SpringValidator<>();
         springValidator.setValidator(validator());
         return springValidator;
     }
@@ -65,5 +56,10 @@ public class StatisticalStepConfig {
     @Bean
     public org.springframework.validation.Validator validator() {
         return new org.springframework.validation.beanvalidation.LocalValidatorFactoryBean();
+    }
+
+    @Bean
+    public ItemWriter<OutputItemStatisticalDto> resultStatisticsDtoItemWriter() {
+        return new ResultStatisticsDtoItemWriter();
     }
 }

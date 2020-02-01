@@ -7,49 +7,18 @@ import lombok.Data;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.validator.ValidationException;
-import org.springframework.batch.item.validator.Validator;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
 @Data
-public class StatisticProcessor implements ItemProcessor<InputStatisticalDataRowDto, OutputItemStatisticalDto>, StepExecutionListener, InitializingBean {
-
-    private Validator validator;
-
-    @Value("${validation.filter}")
-    private Boolean filter = false;
-
-    public StatisticProcessor(Validator validator) {
-        this.validator = validator;
-    }
+public class StatisticProcessor extends ItemProcessorWithValidating<InputStatisticalDataRowDto, OutputItemStatisticalDto> implements StepExecutionListener{
 
     private Map<String, TreeSet<TemporaryStatisticsItemDtoInProcessor>> aggregator;
-    private ArrayList<String> errorLines;
 
-    @Override
-    public OutputItemStatisticalDto process(InputStatisticalDataRowDto inputStatisticalDataRowDto) {
-        try {
-            validator.validate(inputStatisticalDataRowDto);
-            processInput(inputStatisticalDataRowDto);
-        } catch (ValidationException e) {
-            if (filter) {
-                errorLines.add(Objects.toString(inputStatisticalDataRowDto));
-                return null; // filter the item
-            } else {
-                throw e; // skip the item
-            }
-        }
-        return null;
-    }
 
-    private void processInput(InputStatisticalDataRowDto inputStatisticalDataRowDto) {
+     public void processInput(InputStatisticalDataRowDto inputStatisticalDataRowDto) {
         TemporaryStatisticsItemDtoInProcessor temporaryStatisticsProcessorDto = new TemporaryStatisticsItemDtoInProcessor(inputStatisticalDataRowDto);
 
         if (aggregator.containsKey(temporaryStatisticsProcessorDto.getClassNameMethodName())) {
@@ -65,7 +34,6 @@ public class StatisticProcessor implements ItemProcessor<InputStatisticalDataRow
     @Override
     public void beforeStep(StepExecution stepExecution) {
         aggregator = new HashMap<>();
-        errorLines = new ArrayList<>();
     }
 
     @Override
@@ -99,8 +67,5 @@ public class StatisticProcessor implements ItemProcessor<InputStatisticalDataRow
         return ExitStatus.COMPLETED;
     }
 
-    @Override
-    public void afterPropertiesSet() {
-        Assert.notNull(validator, "Validator must not be null.");
-    }
+
 }
