@@ -1,6 +1,5 @@
 package com.evgenyv13.demoapp.batch.statistic.processor;
 
-import com.evgenyv13.demoapp.batch.statistic.model.TemporaryStatisticsProcessorDto;
 import com.evgenyv13.demoapp.batch.statistic.model.OutputItemStatisticalDto;
 import com.evgenyv13.demoapp.batch.statistic.model.InputStatisticalDataRowDto;
 import com.evgenyv13.demoapp.batch.statistic.model.ResponseDataDto;
@@ -31,7 +30,7 @@ public class StatisticProcessor implements ItemProcessor<InputStatisticalDataRow
         this.validator = validator;
     }
 
-    private Map<String, TreeSet<TemporaryStatisticsProcessorDto>> aggregator;
+    private Map<String, TreeSet<TemporaryStatisticsItemDtoInProcessor>> aggregator;
     private ArrayList<String> errorLines;
 
     @Override
@@ -51,12 +50,12 @@ public class StatisticProcessor implements ItemProcessor<InputStatisticalDataRow
     }
 
     private void processInput(InputStatisticalDataRowDto inputStatisticalDataRowDto) {
-        TemporaryStatisticsProcessorDto temporaryStatisticsProcessorDto = new TemporaryStatisticsProcessorDto(inputStatisticalDataRowDto);
+        TemporaryStatisticsItemDtoInProcessor temporaryStatisticsProcessorDto = new TemporaryStatisticsItemDtoInProcessor(inputStatisticalDataRowDto);
 
         if (aggregator.containsKey(temporaryStatisticsProcessorDto.getClassNameMethodName())) {
             aggregator.get(temporaryStatisticsProcessorDto.getClassNameMethodName()).add(temporaryStatisticsProcessorDto);
         } else {
-            TreeSet<TemporaryStatisticsProcessorDto> arrayList = new TreeSet<>();
+            TreeSet<TemporaryStatisticsItemDtoInProcessor> arrayList = new TreeSet<>();
             arrayList.add(temporaryStatisticsProcessorDto);
             aggregator.put(temporaryStatisticsProcessorDto.getClassNameMethodName(), arrayList);
         }
@@ -79,15 +78,15 @@ public class StatisticProcessor implements ItemProcessor<InputStatisticalDataRow
             outputItemStatisticalDto.setMaxTime(methodStatsOfExecutionsTreeSet.last().getExecutionTime());
             outputItemStatisticalDto.setMinTime(methodStatsOfExecutionsTreeSet.first().getExecutionTime());
 
-            ArrayList<TemporaryStatisticsProcessorDto> arrayList = new ArrayList<>(methodStatsOfExecutionsTreeSet);
+            ArrayList<TemporaryStatisticsItemDtoInProcessor> arrayList = new ArrayList<>(methodStatsOfExecutionsTreeSet);
             int treeSetSize = methodStatsOfExecutionsTreeSet.size();
             int medianElementIndex = treeSetSize / 2;
             BigDecimal timeSum = BigDecimal.ZERO;
 
             outputItemStatisticalDto.setMedina(arrayList.get(medianElementIndex).getExecutionTime());
 
-            for (TemporaryStatisticsProcessorDto temporaryStatisticsProcessorDto : arrayList) {
-                timeSum = timeSum.add(BigDecimal.valueOf(temporaryStatisticsProcessorDto.getExecutionTime()));
+            for (TemporaryStatisticsItemDtoInProcessor temporaryStatisticsItemDtoInProcessor : arrayList) {
+                timeSum = timeSum.add(BigDecimal.valueOf(temporaryStatisticsItemDtoInProcessor.getExecutionTime()));
             }
             outputItemStatisticalDto.setAvgTime(timeSum.divide(BigDecimal.valueOf(treeSetSize), 0, RoundingMode.CEILING));
 
