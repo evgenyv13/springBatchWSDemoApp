@@ -8,8 +8,6 @@ import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 
 @Data
@@ -46,21 +44,18 @@ public class StatisticProcessor extends ItemProcessorWithValidating<InputStatist
             outputItemStatisticalDto.setMaxTime(methodStatsOfExecutionsTreeSet.last().getExecutionTime());
             outputItemStatisticalDto.setMinTime(methodStatsOfExecutionsTreeSet.first().getExecutionTime());
 
-            ArrayList<TemporaryStatisticsItemDtoInProcessor> arrayList = new ArrayList<>(methodStatsOfExecutionsTreeSet);
-            int treeSetSize = methodStatsOfExecutionsTreeSet.size();
-            int medianElementIndex = treeSetSize / 2;
-            BigDecimal timeSum = BigDecimal.ZERO;
+            int medianElementIndex = methodStatsOfExecutionsTreeSet.size() / 2;
+            Optional<TemporaryStatisticsItemDtoInProcessor> first = methodStatsOfExecutionsTreeSet.stream().skip(medianElementIndex).findFirst();
+            outputItemStatisticalDto.setMedina(first.get().getExecutionTime());
 
-            outputItemStatisticalDto.setMedina(arrayList.get(medianElementIndex).getExecutionTime());
-
-            for (TemporaryStatisticsItemDtoInProcessor temporaryStatisticsItemDtoInProcessor : arrayList) {
-                timeSum = timeSum.add(BigDecimal.valueOf(temporaryStatisticsItemDtoInProcessor.getExecutionTime()));
-            }
-            outputItemStatisticalDto.setAvgTime(timeSum.divide(BigDecimal.valueOf(treeSetSize), 0, RoundingMode.CEILING));
+            double avgTime = methodStatsOfExecutionsTreeSet.stream()
+                    .map(TemporaryStatisticsItemDtoInProcessor::getExecutionTime)
+                    .mapToLong(Long::longValue)
+                    .average().orElse(0);
+            outputItemStatisticalDto.setAvgTime(avgTime);
 
             resultStats.put(s, outputItemStatisticalDto);
         });
-
 
         stepExecution.getJobExecution().getExecutionContext().put("stats", new ResponseDataDto(resultStats, errorLines));
 

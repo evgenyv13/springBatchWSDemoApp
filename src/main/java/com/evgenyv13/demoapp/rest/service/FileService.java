@@ -25,7 +25,6 @@ public class FileService {
             Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
             return copyLocation.toString();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new FileStorageException("Could not store file " + file.getOriginalFilename()
                     + ". Please try again!");
         }
@@ -34,7 +33,6 @@ public class FileService {
     public void deleteFile(String path) {
         File file = new File(path);
         file.delete();
-
     }
 
 

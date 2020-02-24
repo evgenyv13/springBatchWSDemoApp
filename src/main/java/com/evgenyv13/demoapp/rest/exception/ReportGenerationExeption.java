@@ -1,14 +1,11 @@
 package com.evgenyv13.demoapp.rest.exception;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class ReportGenerationExeption extends RuntimeException {
 
-    private String msg;
-
-    public ReportGenerationExeption(String msg) {
-        this.msg = msg;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
+    @Getter
+    private final String msg;
 }
